@@ -22,10 +22,20 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet]
+        [HttpGet("list")]
+        [HttpGet("/api/list")]
         public async Task<ActionResult<List<Author>>> Get()
         {
             var authors = await _context.Authors.Include(a => a.Books).ToListAsync();
             return ApiResponse.Ok(authors);
+        }
+
+        [HttpGet("first")]
+        public async Task<ActionResult<Author>> GetFirst()
+        {
+            var author = await _context.Authors.FirstOrDefaultAsync();
+            return ApiResponse.Ok(author);
+
         }
 
         [HttpPost]
