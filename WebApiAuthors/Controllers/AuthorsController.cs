@@ -47,6 +47,15 @@ namespace WebApiAuthors.Controllers
             return ApiResponse.Ok(author);
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Author>> GetByName(string name)
+        {
+            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name.Contains(name));
+            if (author == null)
+                return ApiResponse.NotFound("The author doesn't exists");
+            return ApiResponse.Ok(author);
+        }
+
         [HttpGet("{id:int}/books")]
         public async Task<ActionResult<List<Book>>> GetAuthorBooks(int id)
         {
