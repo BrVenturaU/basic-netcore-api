@@ -28,6 +28,14 @@ namespace WebApiAuthors.Controllers
             return ApiResponse.Ok(authors);
         }
 
+        [HttpGet("first")]
+        public async Task<ActionResult<Author>> GetFirst()
+        {
+            var author = await _context.Authors.FirstOrDefaultAsync();
+            return ApiResponse.Ok(author);
+
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(Author author)
         {
