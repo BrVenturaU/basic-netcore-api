@@ -39,7 +39,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Author>> GetById(int id)
+        public async Task<ActionResult<Author>> GetById([FromRoute] int id)
         {
             var author = await _context.Authors.FindAsync(id);
             if (author == null)
@@ -48,7 +48,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<Author>> GetByName(string name)
+        public async Task<ActionResult<Author>> GetByName([FromRoute] string name)
         {
             var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name.Contains(name));
             if (author == null)
@@ -57,7 +57,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{id:int}/books")]
-        public async Task<ActionResult<List<Book>>> GetAuthorBooks(int id)
+        public async Task<ActionResult<List<Book>>> GetAuthorBooks( [FromRoute] int id)
         {
             var authorExists = await _context.Authors.AnyAsync(a => a.Id == id);
             if (!authorExists)
@@ -68,7 +68,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Author author)
+        public async Task<ActionResult> Post([FromBody] Author author)
         {
             _context.Add(author);
             await _context.SaveChangesAsync();
@@ -76,7 +76,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Author author, int id)
+        public async Task<ActionResult> Put([FromBody] Author author, [FromRoute] int id)
         {
             if (author.Id != id)
                 return ApiResponse.BadRequest("The author's id doesn't match.");
@@ -93,7 +93,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var authorExists = await _context.Authors.AnyAsync(a => a.Id == id);
             if (!authorExists)
