@@ -13,7 +13,7 @@ namespace WebApiAuthors.Entities
         [Required(ErrorMessage = "The field {0} is required.")]
         [StringLength(40, ErrorMessage = "The maximum size of characters for the field {0} is {1}.")]
         [FirstCharToUpper]
-        [ExistsName]
+        [ExistsName(typeof(Author))]
         public string Name { get; set; }
         public List<Book> Books { get; set; }
     }
