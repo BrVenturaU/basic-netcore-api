@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
+using WebApiAuthors.Interfaces;
+using WebApiAuthors.Services;
 
 namespace WebApiAuthors
 {
@@ -31,6 +33,9 @@ namespace WebApiAuthors
 
             services.AddControllers().AddNewtonsoftJson(x => 
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

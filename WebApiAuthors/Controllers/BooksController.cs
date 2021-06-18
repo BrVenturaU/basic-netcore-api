@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
 using WebApiAuthors.Entities;
+using WebApiAuthors.Interfaces;
 using WebApiAuthors.Utils;
 
 namespace WebApiAuthors.Controllers
@@ -14,34 +15,23 @@ namespace WebApiAuthors.Controllers
     [Route("[controller]")]
     public class BooksController: ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IBookRepository _bookRepository;
 
-        public BooksController(DataContext context)
+        public BooksController(IBookRepository bookRepository)
         {
-            _context = context;
+            _bookRepository = bookRepository;
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Book>> Get(int id)
         {
-            var book = await _context.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
-            if (book == null)
-                return ApiResponse.NotFound("The book doesn't exists.");
-
-            return ApiResponse.Ok(book);
+            return await _bookRepository.GetBookById(id);
         }
 
         [HttpPost]
         public async Task<ActionResult> Post(Book book)
         {
-            var authorExists = await _context.Authors.AnyAsync(a => a.Id == book.AuthorId);
-            if (!authorExists)
-                return ApiResponse.NotFound("The book doesn't exists.");
-
-            _context.Add(book);
-            await _context.SaveChangesAsync();
-
-            return ApiResponse.Ok(message: "Book is successfully created!");
+            return await _bookRepository.CreateBook(book);
         }
 
     }
