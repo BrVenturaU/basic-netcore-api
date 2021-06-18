@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
@@ -47,8 +48,27 @@ namespace WebApiAuthors
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+
+            app.Use(async (context, next) =>
+            {
+                using var ms = new MemoryStream();
+                var responseOriginalBody = context.Response.Body;
+                context.Response.Body = ms;
+
+                await next.Invoke();
+
+                ms.Seek(0, SeekOrigin.Begin);
+                string response = new StreamReader(ms).ReadToEnd();
+                ms.Seek(0, SeekOrigin.Begin);
+
+                await ms.CopyToAsync(responseOriginalBody);
+                context.Response.Body = responseOriginalBody;
+
+                logger.LogInformation(response);
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
