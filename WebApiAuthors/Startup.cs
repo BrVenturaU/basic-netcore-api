@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
 using WebApiAuthors.Interfaces;
+using WebApiAuthors.Middlewares;
 using WebApiAuthors.Services;
 
 namespace WebApiAuthors
@@ -48,26 +49,10 @@ namespace WebApiAuthors
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.Use(async (context, next) =>
-            {
-                using var ms = new MemoryStream();
-                var responseOriginalBody = context.Response.Body;
-                context.Response.Body = ms;
-
-                await next.Invoke();
-
-                ms.Seek(0, SeekOrigin.Begin);
-                string response = new StreamReader(ms).ReadToEnd();
-                ms.Seek(0, SeekOrigin.Begin);
-
-                await ms.CopyToAsync(responseOriginalBody);
-                context.Response.Body = responseOriginalBody;
-
-                logger.LogInformation(response);
-            });
+            app.UseMiddleware<ResponseLogMiddleware>();
 
             if (env.IsDevelopment())
             {
