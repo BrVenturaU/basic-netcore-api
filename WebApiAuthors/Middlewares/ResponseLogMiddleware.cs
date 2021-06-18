@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace WebApiAuthors.Middlewares
 {
+
+    public static class ResponseLogMiddlewareExtensions
+    {
+        public static IApplicationBuilder UseResponseLog(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<ResponseLogMiddleware>();
+        }
+    }
+
     public class ResponseLogMiddleware
     {
         private readonly RequestDelegate _next;
