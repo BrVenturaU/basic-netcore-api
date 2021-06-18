@@ -35,6 +35,7 @@ namespace WebApiAuthors
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
