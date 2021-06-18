@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
 using WebApiAuthors.Entities;
+using WebApiAuthors.Interfaces;
 using WebApiAuthors.Utils;
 
 namespace WebApiAuthors.Controllers
@@ -14,11 +15,11 @@ namespace WebApiAuthors.Controllers
     [Route("api/[controller]")]
     public class AuthorsController: ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IAuthorRepository _authorRepository;
 
-        public AuthorsController(DataContext context)
+        public AuthorsController(IAuthorRepository authorRepository)
         {
-            _context = context;
+            _authorRepository = authorRepository;
         }
 
         [HttpGet]
@@ -26,83 +27,52 @@ namespace WebApiAuthors.Controllers
         [HttpGet("/api/list")]
         public async Task<ActionResult<List<Author>>> Get()
         {
-            var authors = await _context.Authors.Include(a => a.Books).ToListAsync();
-            return ApiResponse.Ok(authors);
+            return await _authorRepository.GetAllAuthors();
         }
 
         [HttpGet("first")]
         public async Task<ActionResult<Author>> GetFirst()
         {
-            var author = await _context.Authors.FirstOrDefaultAsync();
-            return ApiResponse.Ok(author);
+            return await _authorRepository.GetFirstAuthor();
 
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Author>> GetById([FromRoute] int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
-                return ApiResponse.NotFound("The author doesn't exists");
-            return ApiResponse.Ok(author);
+            return await _authorRepository.GetAuthorById(id);
         }
 
         [HttpGet("{name}")]
         public async Task<ActionResult<Author>> GetByName([FromRoute] string name)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name.Contains(name));
-            if (author == null)
-                return ApiResponse.NotFound("The author doesn't exists");
-            return ApiResponse.Ok(author);
+            return await _authorRepository.GetAuthorByName(name);
         }
 
         [HttpGet("{id:int}/books")]
         public async Task<ActionResult<List<Book>>> GetAuthorBooks( [FromRoute] int id)
         {
-            var authorExists = await _context.Authors.AnyAsync(a => a.Id == id);
-            if (!authorExists)
-                return ApiResponse.NotFound("The author doesn't exists");
-            var authorBooks = await _context.Books.Where(b => b.AuthorId == id).ToListAsync();
-            return ApiResponse.Ok(authorBooks);
+            return await _authorRepository.GetAuthorBooks(id);
 
         }
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Author author)
         {
-            _context.Add(author);
-            await _context.SaveChangesAsync();
-            return ApiResponse.Created(message: "Author is successfully created!");
+            return await _authorRepository.CreateAuthor(author);
         }
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Put([FromBody] Author author, [FromRoute] int id)
         {
-            if (author.Id != id)
-                return ApiResponse.BadRequest("The author's id doesn't match.");
-
-            var authorExists = await _context.Authors.AnyAsync(a => a.Id == id);
-            if (!authorExists)
-                return ApiResponse.NotFound("The author doesn't exists.");
-
-            _context.Update(author);
-            await _context.SaveChangesAsync();
-
-            return ApiResponse.Ok(message: "Author is successfully updated!");
+            return await _authorRepository.UpdateAuthor(author, id);
 
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-            var authorExists = await _context.Authors.AnyAsync(a => a.Id == id);
-            if (!authorExists)
-                return ApiResponse.NotFound("The author doesn't exists.");
-
-            _context.Remove(new Author() { Id = id });
-            await _context.SaveChangesAsync();
-
-            return ApiResponse.Created(message: "Author is successfully deleted!");
+            return await _authorRepository.DeleteAuthor(id);
 
         }
     }
