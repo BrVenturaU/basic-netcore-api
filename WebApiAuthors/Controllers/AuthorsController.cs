@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiAuthors.Database;
 using WebApiAuthors.Entities;
+using WebApiAuthors.Filters;
 using WebApiAuthors.Interfaces;
 using WebApiAuthors.Utils;
 
@@ -26,6 +27,7 @@ namespace WebApiAuthors.Controllers
         [HttpGet]
         [HttpGet("list")]
         [HttpGet("/api/list")]
+        [ServiceFilter(typeof(MyActionFilter))]
         public async Task<ActionResult<List<Author>>> Get()
         {
             return await _authorRepository.GetAllAuthors();
@@ -33,6 +35,7 @@ namespace WebApiAuthors.Controllers
 
         [HttpGet("first")]
         [ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(MyActionFilter))]
         public async Task<ActionResult<Author>> GetFirst()
         {
             return await _authorRepository.GetFirstAuthor();
