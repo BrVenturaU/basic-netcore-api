@@ -50,6 +50,8 @@ namespace WebApiAuthors
 
             app.UseRouting();
 
+            app.UseResponseCaching();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

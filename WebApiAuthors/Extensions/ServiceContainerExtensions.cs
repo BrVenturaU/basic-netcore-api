@@ -18,6 +18,8 @@ namespace WebApiAuthors.Extensions
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
 
+            services.AddResponseCaching();
+
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 

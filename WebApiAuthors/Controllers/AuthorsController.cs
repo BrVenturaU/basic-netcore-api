@@ -31,6 +31,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("first")]
+        [ResponseCache(Duration = 10)]
         public async Task<ActionResult<Author>> GetFirst()
         {
             return await _authorRepository.GetFirstAuthor();
