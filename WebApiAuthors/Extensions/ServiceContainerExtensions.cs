@@ -21,9 +21,11 @@ namespace WebApiAuthors.Extensions
             services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddTransient<MyActionFilter>();
+            services.AddHostedService<WriteFileHostedService>();
 
             services.AddResponseCaching();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
 
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
