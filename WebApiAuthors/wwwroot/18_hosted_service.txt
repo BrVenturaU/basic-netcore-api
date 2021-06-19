@@ -1,0 +1,13 @@
+﻿Process start.
+Process end.
+Process start.
+Process end.
+Process start.
+Proceso en ejecución: 18/06/2021 10:04:25
+Proceso en ejecución: 18/06/2021 10:04:30
+Proceso en ejecución: 18/06/2021 10:04:35
+Proceso en ejecución: 18/06/2021 10:04:40
+Proceso en ejecución: 18/06/2021 10:04:45
+Proceso en ejecución: 18/06/2021 10:04:50
+Proceso en ejecución: 18/06/2021 10:04:55
+Process end.
