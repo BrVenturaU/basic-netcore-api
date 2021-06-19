@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WebApiAuthors.Extensions;
+using WebApiAuthors.Filters;
 
 namespace WebApiAuthors
 {
@@ -21,7 +22,9 @@ namespace WebApiAuthors
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddNewtonsoftJson(x => 
+            services.AddControllers(options =>
+                options.Filters.Add(typeof(ExceptionFilter))
+            ).AddNewtonsoftJson(x => 
                 x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.ConfigureServices(Configuration);
@@ -37,7 +40,7 @@ namespace WebApiAuthors
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseResponseLog();
+            // app.UseResponseLog();
 
             if (env.IsDevelopment())
             {

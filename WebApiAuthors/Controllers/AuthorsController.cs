@@ -38,6 +38,7 @@ namespace WebApiAuthors.Controllers
         [ServiceFilter(typeof(MyActionFilter))]
         public async Task<ActionResult<Author>> GetFirst()
         {
+            // throw new NotImplementedException("Test Exception for the filter.");
             return await _authorRepository.GetFirstAuthor();
 
         }
