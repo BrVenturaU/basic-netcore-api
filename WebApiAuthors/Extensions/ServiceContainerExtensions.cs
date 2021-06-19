@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,6 +20,7 @@ namespace WebApiAuthors.Extensions
             services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddResponseCaching();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

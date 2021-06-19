@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,7 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpPut("{id:int}")]
+        // [Authorize]
         public async Task<ActionResult> Put([FromBody] Author author, [FromRoute] int id)
         {
             return await _authorRepository.UpdateAuthor(author, id);
